@@ -19,19 +19,11 @@ class MyCounterApp extends StatelessWidget{
 
 }
 
-class HomeScreen extends StatefulWidget{
-  const HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
 
-  @override
-  State<StatefulWidget> createState() {
-    return HomeScreenUI();
-  }
+  final CounterController counterController = Get.put(CounterController());
 
-}
-
-class HomeScreenUI extends State<HomeScreen>{
-  //int count = 0;
-  RxInt count = 0.obs;    /// we have to use "RxInt and .obs" for using Get-X
 
   @override
   Widget build(BuildContext context) {
@@ -40,36 +32,32 @@ class HomeScreenUI extends State<HomeScreen>{
         title: Text('My Counter App'),
       ),
       body: Center(
-        child: Obx(           /// we have to wrap the fixed Widget into "Obx" for using Get-X
-              () => Text(
-            count.toString(),
-            style: const TextStyle(
-              fontSize: 30,
-              color: Colors.red,
-              fontWeight: FontWeight.w800,
+        child: Obx(
+            () => Text(
+              counterController.count.toString(),
+              style: const TextStyle(
+                fontSize: 30,
+                color: Colors.red,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-          ),
-        ),
+        )
       ),
-      // body: Center(
-      //   child: Text(
-      //     count.toString(),
-      //     style: const TextStyle(
-      //         fontSize: 30,
-      //         color: Colors.red,
-      //       fontWeight: FontWeight.w800,
-      //     ),
-      //   ),
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){
-          count++;
-          // if(mounted){
-          //   setState(() {});       /// we have to remove "setState"
-          // }
+          counterController.increment();
         },
         child: Icon(Icons.add),
       ),
     );
+  }
+}
+
+
+class CounterController extends GetxController{
+  RxInt count = 0.obs;
+
+  void increment(){
+    count++;
   }
 }
